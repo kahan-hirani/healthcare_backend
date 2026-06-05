@@ -1,0 +1,422 @@
+{
+	"info": {
+		"_postman_id": "healthcare-backend-collection",
+		"name": "Healthcare Backend API",
+		"description": "Complete API collection for Healthcare Backend System with Authentication, Patients, Doctors, and Mappings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register", ""]
+						},
+						"description": "Register a new user with name, email, and password"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"jwt_token\", jsonData.access);",
+									"console.log(\"Token stored: \" + jsonData.access);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login", ""]
+						},
+						"description": "Login with email and password to get JWT access and refresh tokens. Token is automatically stored in environment variable 'jwt_token'."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Patients",
+			"item": [
+				{
+					"name": "Create Patient",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Smith\",\n    \"age\": 30,\n    \"gender\": \"Female\",\n    \"phone\": \"9876543210\",\n    \"address\": \"456 Oak Avenue, Medical City\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/patients/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "patients", ""]
+						},
+						"description": "Create a new patient. Requires authentication. Patient will be associated with the logged-in user."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Patients",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/patients/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "patients", ""]
+						},
+						"description": "Get all patients created by the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/patients/{{patient_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "patients", "{{patient_id}}", ""]
+						},
+						"description": "Get a specific patient by ID. User can only access their own patients."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Patient",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Smith Updated\",\n    \"age\": 31,\n    \"gender\": \"Female\",\n    \"phone\": \"9876543211\",\n    \"address\": \"789 Pine Street, Health Town\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/patients/{{patient_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "patients", "{{patient_id}}", ""]
+						},
+						"description": "Update a patient's information. User can only update their own patients."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Patient",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/patients/{{patient_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "patients", "{{patient_id}}", ""]
+						},
+						"description": "Delete a patient. User can only delete their own patients. Related mappings will be automatically deleted due to CASCADE."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Doctors",
+			"item": [
+				{
+					"name": "Create Doctor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dr. Robert Wilson\",\n    \"specialization\": \"Cardiology\",\n    \"phone\": \"5551234567\",\n    \"email\": \"dr.robert@hospital.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/doctors/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "doctors", ""]
+						},
+						"description": "Create a new doctor. Requires authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Doctors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/doctors/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "doctors", ""]
+						},
+						"description": "Get all doctors. All authenticated users can view all doctors."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctor By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/doctors/{{doctor_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "doctors", "{{doctor_id}}", ""]
+						},
+						"description": "Get a specific doctor by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doctor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dr. Robert Wilson Jr.\",\n    \"specialization\": \"Neurology\",\n    \"phone\": \"5551234568\",\n    \"email\": \"dr.robert.new@hospital.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/doctors/{{doctor_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "doctors", "{{doctor_id}}", ""]
+						},
+						"description": "Update a doctor's information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Doctor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/doctors/{{doctor_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "doctors", "{{doctor_id}}", ""]
+						},
+						"description": "Delete a doctor. Related mappings will be automatically deleted due to CASCADE."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mappings",
+			"item": [
+				{
+					"name": "Create Mapping",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"patient_id\": {{patient_id}},\n    \"doctor_id\": {{doctor_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/mappings/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mappings", ""]
+						},
+						"description": "Create a new mapping between a patient and doctor. User can only map doctors to their own patients. Duplicate mappings are prevented."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Mappings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mappings/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mappings", ""]
+						},
+						"description": "Get all patient-doctor mappings"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient Doctors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mappings/{{patient_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mappings", "{{patient_id}}", ""]
+						},
+						"description": "Get all doctors mapped to a specific patient. User can only view mappings for their own patients."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Mapping",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/mappings/delete/{{mapping_id}}/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "mappings", "delete", "{{mapping_id}}", ""]
+						},
+						"description": "Delete a patient-doctor mapping by mapping ID"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "patient_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "doctor_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "mapping_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
