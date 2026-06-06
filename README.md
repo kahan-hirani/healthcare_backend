@@ -286,7 +286,3 @@ A complete Postman collection is included in `Postman_Collection.json` with all 
 - Phone numbers limited to 15 characters
 - Addresses stored up to 255 characters
 - All timestamps automatically managed by Django
-
----
-
-**Built with ❤️ for healthcare professionals**
