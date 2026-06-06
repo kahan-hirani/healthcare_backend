@@ -1,4 +1,4 @@
-# 🏥 Healthcare Backend API
+# Healthcare Backend API
 
 A robust and secure REST API designed for hospital staff, patient management, and doctor-patient relationship tracking.
 
@@ -8,11 +8,11 @@ A robust and secure REST API designed for hospital staff, patient management, an
 
 ```mermaid
 graph TD
-    User((👤 Client/User)) -->|REST API| API[Django REST Framework]
-    API -->|Auth| JWT[🔒 SimpleJWT Auth]
-    API -->|Validation| Serializers[📝 DRF Serializers]
-    Serializers -->|CRUD| ORM[🐍 Django ORM]
-    ORM -->|Persistence| DB[(🗄️ PostgreSQL)]
+    User((Client/User)) -->|REST API| API[Django REST Framework]
+    API -->|Auth| JWT[SimpleJWT Auth]
+    API -->|Validation| Serializers[DRF Serializers]
+    Serializers -->|CRUD| ORM[Django ORM]
+    ORM -->|Persistence| DB[(PostgreSQL)]
 
     subgraph "Core Backend Services"
     API
@@ -82,8 +82,6 @@ erDiagram
         int id PK
         string name
         string email
-        <!-- string first_name -->
-        <!-- string last_name -->
         string password
         boolean is_active
         boolean is_staff
@@ -206,7 +204,7 @@ Authorization: Bearer <your_access_token>
 
 ---
 
-### 🔄 Request Lifecycle
+### Request Lifecycle
 
 ```mermaid
 sequenceDiagram
@@ -235,7 +233,7 @@ sequenceDiagram
 
 ---
 
-## 🧪 Testing
+## Testing
 
 The project includes a robust testing suite with tests for all modules.
 
@@ -254,7 +252,7 @@ python manage.py test mappings
 
 ---
 
-## 🛡️ Security Features
+## Security Features
 
 ### Patient Ownership
 - Patients are scoped to the user who created them via `created_by` foreign key
