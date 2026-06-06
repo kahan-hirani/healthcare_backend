@@ -103,7 +103,7 @@ erDiagram
         string name
         string specialization
         string phone
-        string email UK
+        string email
         datetime created_at
     }
     MAPPING {
@@ -111,7 +111,6 @@ erDiagram
         int patient FK
         int doctor FK
         datetime assigned_at
-        UK patient_doctor
     }
 ```
 
