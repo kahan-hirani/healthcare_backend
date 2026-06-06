@@ -36,7 +36,7 @@ class PatientTests(APITestCase):
     def test_create_patient(self):
         """Test creating a new patient."""
         data = {
-            'name': 'John Doe',
+            'name': 'kahan hirani',
             'age': 30,
             'gender': 'Male',
             'phone': '1234567890',
@@ -44,7 +44,7 @@ class PatientTests(APITestCase):
         }
         response = self.client.post('/api/patients/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['name'], 'John Doe')
+        self.assertEqual(response.data['name'], 'kahan hirani')
         self.assertEqual(response.data['created_by'], self.user.id)
     
     def test_list_patients(self):
@@ -84,5 +84,6 @@ class PatientTests(APITestCase):
         )
         
         response = self.client.delete(f'/api/patients/{patient.id}/')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Patient deleted successfully')
         self.assertFalse(Patient.objects.filter(id=patient.id).exists())

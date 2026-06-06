@@ -2,9 +2,10 @@
 Views for doctors module.
 """
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
+from rest_framework.response import Response
 
 from .models import Doctor
 from .serializers import DoctorSerializer
@@ -43,3 +44,14 @@ class DoctorDetailView(generics.RetrieveUpdateDestroyAPIView):
             raise NotFound(detail={"error": "Doctor not found"})
         
         return obj
+    
+    def destroy(self, request, *args, **kwargs):
+        """
+        Override destroy to return success message.
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            {"message": "Doctor deleted successfully"},
+            status=status.HTTP_200_OK
+        )

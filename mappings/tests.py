@@ -102,5 +102,6 @@ class MappingTests(APITestCase):
         mapping = PatientDoctorMapping.objects.create(patient=self.patient, doctor=self.doctor)
         
         response = self.client.delete(f'/api/mappings/delete/{mapping.id}/')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Mapping deleted successfully')
         self.assertFalse(PatientDoctorMapping.objects.filter(id=mapping.id).exists())

@@ -2,9 +2,10 @@
 Views for patients module.
 """
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
+from rest_framework.response import Response
 
 from .models import Patient
 from .serializers import PatientSerializer
@@ -61,3 +62,14 @@ class PatientDetailView(generics.RetrieveUpdateDestroyAPIView):
         
         self.check_object_permissions(self.request, obj)
         return obj
+    
+    def destroy(self, request, *args, **kwargs):
+        """
+        Override destroy to return success message.
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            {"message": "Patient deleted successfully"},
+            status=status.HTTP_200_OK
+        )
