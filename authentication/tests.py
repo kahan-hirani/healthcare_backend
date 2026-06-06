@@ -16,21 +16,21 @@ class AuthenticationTests(APITestCase):
     def test_register_success(self):
         """Test successful user registration."""
         data = {
-            'name': 'John Doe',
-            'email': 'john@example.com',
+            'name': 'kahan',
+            'email': 'kahan@example.com',
             'password': 'password123'
         }
         response = self.client.post('/api/auth/register/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['message'], 'User registered successfully')
-        self.assertTrue(User.objects.filter(email='john@example.com').exists())
+        self.assertTrue(User.objects.filter(email='kahan@example.com').exists())
     
     def test_register_duplicate_email(self):
         """Test registration with duplicate email."""
-        User.objects.create_user(username='john@example.com', email='john@example.com')
+        User.objects.create_user(username='kahan@example.com', email='kahan@example.com')
         data = {
-            'name': 'John Doe',
-            'email': 'john@example.com',
+            'name': 'kahan',
+            'email': 'kahan@example.com',
             'password': 'password123'
         }
         response = self.client.post('/api/auth/register/', data)
@@ -38,9 +38,9 @@ class AuthenticationTests(APITestCase):
     
     def test_login_success(self):
         """Test successful login."""
-        User.objects.create_user(username='john@example.com', email='john@example.com', password='password123')
+        User.objects.create_user(username='kahan@example.com', email='kahan@example.com', password='password123')
         data = {
-            'email': 'john@example.com',
+            'email': 'kahan@example.com',
             'password': 'password123'
         }
         response = self.client.post('/api/auth/login/', data)
